@@ -3,6 +3,7 @@
 @inject IStringLocalizer<SharedResources> L
 @inject IUserContext UserCtx
 @inject IReservationService Service
+@inject NavigationManager Nav
 
 <header class="topbar">
     <div class="topbar-inner">
@@ -38,6 +39,7 @@
             }
 
             <form method="post" action="/culture" class="inline">
+                <input type="hidden" name="returnUrl" value="@ReturnUrl" />
                 <button type="submit" name="culture" value="en" class="btn-link lang @(CultureCode == "en" ? "active" : "")">EN</button>
                 <button type="submit" name="culture" value="pl" class="btn-link lang @(CultureCode == "pl" ? "active" : "")">PL</button>
             </form>
@@ -60,6 +62,8 @@
     private UserDto? _currentUser;
 
     private static string CultureCode => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    private string ReturnUrl => new Uri(Nav.Uri).PathAndQuery;
 
     protected override async Task OnInitializedAsync()
     {
