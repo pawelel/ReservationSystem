@@ -1,0 +1,183 @@
+@page "/"
+@rendermode InteractiveServer
+@using Microsoft.Extensions.Localization
+@inject IReservationService Service
+@inject IUserContext UserCtx
+@inject IStringLocalizer<SharedResources> L
+
+<PageTitle>@L["PageTitle"]</PageTitle>
+
+<h1>@L["PageTitle"]</h1>
+
+@if (_currentUser is null)
+{
+    <p><em>@L["LoginFirst"]</em></p>
+}
+else
+{
+    <section class="card">
+        <h2>@L["NewReservation"]</h2>
+
+        <EditForm Model="_form" OnValidSubmit="SubmitAsync" FormName="create-reservation">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="row">
+                <label>
+                    @L["Desk"]
+                    <InputSelect @bind-Value="_form.DeskId">
+                        <option value="0">@L["ChoosePrompt"]</option>
+                        @foreach (var d in _desks)
+                        {
+                            <option value="@d.Id">@d.Name</option>
+                        }
+                    </InputSelect>
+                </label>
+            </div>
+
+            <div class="row">
+                <label>
+                    @L["From"]
+                    <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="_form.StartAt" ParsingErrorMessage="@L["Error_InvalidDateTime"]" />
+                </label>
+
+                <label>
+                    @L["To"]
+                    <InputDate Type="InputDateType.DateTimeLocal" @bind-Value="_form.EndAt" ParsingErrorMessage="@L["Error_InvalidDateTime"]" />
+                </label>
+            </div>
+
+            @if (Conflicts.Count > 0)
+            {
+                <div class="alert alert-warning">
+                    <strong>@L["ConflictsHeading"]</strong>
+                    <ul>
+                        @foreach (var c in Conflicts)
+                        {
+                            <li>#@c.Id — @c.UserName, @c.StartAt.ToString("yyyy-MM-dd HH:mm") – @c.EndAt.ToString("HH:mm")</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="form-actions">
+                <button type="submit" disabled="@(Conflicts.Count > 0 || _form.DeskId == 0)">@L["Reserve"]</button>
+            </div>
+        </EditForm>
+
+        @if (_message is not null)
+        {
+            <div class="alert @(_isError ? "alert-error" : "alert-success")">@_message</div>
+        }
+    </section>
+}
+
+<section class="card">
+    <h2>@L["ExistingReservations"]</h2>
+
+    @if (_reservations.Count == 0)
+    {
+        <p><em>@L["NoReservations"]</em></p>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>@L["Desk"]</th>
+                    <th>@L["TableUser"]</th>
+                    <th>@L["From"]</th>
+                    <th>@L["To"]</th>
+                    <th>@L["TableStatus"]</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in _reservations)
+                {
+                    <tr class="@(r.Status == "Cancelled" ? "cancelled" : "")">
+                        <td>@r.Id</td>
+                        <td>@r.DeskName</td>
+                        <td>@r.UserName</td>
+                        <td>@r.StartAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@r.EndAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@L[$"Status_{r.Status}"]</td>
+                        <td>
+                            @if (r.Status == "Active" && r.UserId == _currentUser?.Id)
+                            {
+                                <button type="button" class="btn-secondary" @onclick="() => CancelAsync(r.Id)">@L["Cancel"]</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</section>
+
+@code {
+    private CreateReservationRequest _form = NewForm();
+    private IReadOnlyList<DeskDto> _desks = [];
+    private IReadOnlyList<ReservationDto> _reservations = [];
+    private UserDto? _currentUser;
+    private string? _message;
+    private bool _isError;
+
+    private IReadOnlyList<ReservationDto> Conflicts =>
+        _form.DeskId == 0 || _form.EndAt <= _form.StartAt
+            ? []
+            : _reservations
+                .Where(r => r.Status == "Active"
+                    && r.DeskId == _form.DeskId
+                    && r.EndAt > _form.StartAt
+                    && r.StartAt < _form.EndAt)
+                .ToArray();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _desks        = await Service.GetDesksAsync();
+        _reservations = (await Service.GetReservationsAsync(null)).Where(r => r.Status == "Active").ToArray();
+
+        var id = UserCtx.CurrentUserId;
+        if (id is not null)
+        {
+            var users = await Service.GetUsersAsync();
+            _currentUser = users.FirstOrDefault(u => u.Id == id);
+        }
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (_currentUser is null) return;
+        _message = null;
+
+        var result = await Service.CreateAsync(_form, _currentUser.Id);
+        if (result.IsSuccess)
+        {
+            _message = string.Format(L["CreatedReservation"], result.Value!.Id);
+            _isError = false;
+            _form = NewForm();
+        }
+        else
+        {
+            _message = string.Format(L["ErrorPrefix"], L[result.Error ?? "Error_Unexpected"]);
+            _isError = true;
+        }
+
+        _reservations = (await Service.GetReservationsAsync(null)).Where(r => r.Status == "Active").ToArray();
+    }
+
+    private async Task CancelAsync(int id)
+    {
+        if (_currentUser is null) return;
+        await Service.CancelAsync(id, _currentUser.Id);
+        _reservations = (await Service.GetReservationsAsync(null)).Where(r => r.Status == "Active").ToArray();
+    }
+
+    private static CreateReservationRequest NewForm() => new()
+    {
+        StartAt = DateTime.Today.AddHours(9),
+        EndAt   = DateTime.Today.AddHours(17)
+    };
+}

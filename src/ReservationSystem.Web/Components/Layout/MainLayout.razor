@@ -1,0 +1,71 @@
+@inherits LayoutComponentBase
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResources> L
+@inject IUserContext UserCtx
+@inject IReservationService Service
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <strong>@L["AppTitle"]</strong>
+            <nav>
+                <a href="/">@L["Nav_Home"]</a>
+                <a href="/race">@L["Nav_Race"]</a>
+                <a href="/swagger" target="_blank">Swagger</a>
+            </nav>
+        </div>
+
+        <div class="session">
+            @if (_currentUser is not null)
+            {
+                <span class="user-chip">@_currentUser.Name</span>
+                <form method="post" action="/logout" class="inline">
+                    <button type="submit" class="btn-link">@L["Logout"]</button>
+                </form>
+            }
+            else
+            {
+                <form method="post" action="/login" class="inline login-form">
+                    <select name="userId" required>
+                        <option value="">@L["LoginAs"]</option>
+                        @foreach (var u in _users)
+                        {
+                            <option value="@u.Id">@u.Name</option>
+                        }
+                    </select>
+                    <button type="submit" class="btn-link">@L["Login"]</button>
+                </form>
+            }
+
+            <form method="post" action="/culture" class="inline">
+                <button type="submit" name="culture" value="en" class="btn-link lang @(CultureCode == "en" ? "active" : "")">EN</button>
+                <button type="submit" name="culture" value="pl" class="btn-link lang @(CultureCode == "pl" ? "active" : "")">PL</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    @Body
+</main>
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    private IReadOnlyList<UserDto> _users = [];
+    private UserDto? _currentUser;
+
+    private static string CultureCode => System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await Service.GetUsersAsync();
+        var id = UserCtx.CurrentUserId;
+        if (id is not null)
+            _currentUser = _users.FirstOrDefault(u => u.Id == id);
+    }
+}

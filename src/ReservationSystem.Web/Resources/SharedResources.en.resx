@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="AppTitle" xml:space="preserve"><value>Reservation System</value></data>
+  <data name="PageTitle" xml:space="preserve"><value>Desk bookings</value></data>
+
+  <data name="LoggedInAs" xml:space="preserve"><value>Logged in as</value></data>
+  <data name="Logout" xml:space="preserve"><value>Log out</value></data>
+  <data name="LoginAs" xml:space="preserve"><value>Log in as</value></data>
+  <data name="Login" xml:space="preserve"><value>Log in</value></data>
+  <data name="LoginFirst" xml:space="preserve"><value>Please log in to book a desk.</value></data>
+
+  <data name="NewReservation" xml:space="preserve"><value>New booking</value></data>
+  <data name="Desk" xml:space="preserve"><value>Desk</value></data>
+  <data name="From" xml:space="preserve"><value>From</value></data>
+  <data name="To" xml:space="preserve"><value>To</value></data>
+  <data name="Reserve" xml:space="preserve"><value>Book</value></data>
+  <data name="ChoosePrompt" xml:space="preserve"><value>-- choose --</value></data>
+
+  <data name="ConflictsHeading" xml:space="preserve"><value>This slot overlaps with existing bookings:</value></data>
+  <data name="ExistingReservations" xml:space="preserve"><value>Existing bookings</value></data>
+  <data name="NoReservations" xml:space="preserve"><value>No bookings.</value></data>
+  <data name="TableUser" xml:space="preserve"><value>User</value></data>
+  <data name="TableStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+
+  <data name="CreatedReservation" xml:space="preserve"><value>Created booking #{0}</value></data>
+  <data name="ErrorPrefix" xml:space="preserve"><value>Error: {0}</value></data>
+
+  <data name="Language" xml:space="preserve"><value>Language</value></data>
+
+  <data name="Nav_Home" xml:space="preserve"><value>Bookings</value></data>
+  <data name="Nav_Race" xml:space="preserve"><value>Race demo</value></data>
+
+  <data name="Race_Title" xml:space="preserve"><value>Concurrency race demo</value></data>
+  <data name="Race_Description" xml:space="preserve"><value>Fire N simultaneous booking attempts for the same desk and time slot. Exactly one should win; all others should get a conflict.</value></data>
+  <data name="Race_Attackers" xml:space="preserve"><value>Number of attackers</value></data>
+  <data name="Race_Fire" xml:space="preserve"><value>Fire!</value></data>
+  <data name="Race_Running" xml:space="preserve"><value>Running…</value></data>
+  <data name="Race_Outcome_Winner" xml:space="preserve"><value>Winner</value></data>
+  <data name="Race_Outcome_Conflict" xml:space="preserve"><value>Conflict</value></data>
+  <data name="Race_Outcome_Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Race_Summary" xml:space="preserve"><value>Out of {0} attackers: {1} winner(s), {2} conflicts, {3} other errors.</value></data>
+  <data name="Race_TableTime" xml:space="preserve"><value>Time (ms)</value></data>
+  <data name="Race_TableOutcome" xml:space="preserve"><value>Outcome</value></data>
+  <data name="Race_TableReservation" xml:space="preserve"><value>Booking #</value></data>
+  <data name="Race_TableMessage" xml:space="preserve"><value>Message</value></data>
+
+  <data name="Error_InvalidDateTime" xml:space="preserve"><value>Invalid date or time.</value></data>
+  <data name="Error_EndAtNotAfterStart" xml:space="preserve"><value>End time must be after start time.</value></data>
+  <data name="Error_DeskNotFound" xml:space="preserve"><value>Desk not found.</value></data>
+  <data name="Error_UserNotFound" xml:space="preserve"><value>User not found.</value></data>
+  <data name="Error_TimeSlotTaken" xml:space="preserve"><value>This desk is already reserved for the requested time slot.</value></data>
+  <data name="Error_ReservationNotFound" xml:space="preserve"><value>Booking not found.</value></data>
+  <data name="Error_NotOwner" xml:space="preserve"><value>Only the booking owner can cancel it.</value></data>
+  <data name="Error_Unexpected" xml:space="preserve"><value>An unexpected error occurred. Please try again.</value></data>
+  <data name="Error_AttackerCountOutOfRange" xml:space="preserve"><value>Attacker count is out of range.</value></data>
+
+  <data name="Status_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Status_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+
+  <data name="Reconnect_Rejoining" xml:space="preserve"><value>Rejoining the server...</value></data>
+  <data name="Reconnect_RejoinRetry" xml:space="preserve"><value>Rejoin failed... trying again in {0} seconds.</value></data>
+  <data name="Reconnect_RejoinFailed" xml:space="preserve"><value>Failed to rejoin.&lt;br /&gt;Please retry or reload the page.</value></data>
+  <data name="Reconnect_Retry" xml:space="preserve"><value>Retry</value></data>
+  <data name="Reconnect_Paused" xml:space="preserve"><value>The session has been paused by the server.</value></data>
+  <data name="Reconnect_ResumeFailed" xml:space="preserve"><value>Failed to resume the session.&lt;br /&gt;Please retry or reload the page.</value></data>
+  <data name="Reconnect_Resume" xml:space="preserve"><value>Resume</value></data>
+</root>

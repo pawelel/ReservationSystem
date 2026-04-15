@@ -1,0 +1,16 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## Rider / VS
+.idea/
+
+## Secrets
+**/secrets.json
+
+## OS
+Thumbs.db
+.DS_Store
