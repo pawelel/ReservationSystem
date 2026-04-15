@@ -12,7 +12,11 @@ Stack: .NET 10, ASP.NET Core (Blazor Server + Minimal API), EF Core, SQL Server.
 
 **Prerequisites:**
 - .NET 10 SDK
-- SQL Server 2019+ on `localhost:1433` with Windows Authentication (LocalDB works too). For SQL auth or a remote server, edit `Database:ConnectionString` in `src/ReservationSystem.Web/appsettings.Development.json`.
+- SQL Server 2019+ on `localhost:1433` with Windows Authentication (LocalDB works too). On Linux / without Windows Auth, run the dev image:
+  ```bash
+  docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Your_password123" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
+  ```
+  and set `Database:ConnectionString` in `src/ReservationSystem.Web/appsettings.Development.json` to `Server=localhost;Database=ReservationSystem;User Id=sa;Password=Your_password123;TrustServerCertificate=True;`.
 - `dotnet-ef` tool: `dotnet tool install --global dotnet-ef`
 
 ```bash
