@@ -52,7 +52,7 @@ public static class FormEndpoints
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1), IsEssential = true });
 
-            return Results.Redirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
+            return Results.LocalRedirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
         })
         .DisableAntiforgery();
 

@@ -97,7 +97,7 @@ internal sealed class ReservationRepository(IDbContextFactory<AppDbContext> dbFa
                 DeskNotFoundMessage => new RepositoryError.DeskNotFound(message),
                 UserNotFoundMessage => new RepositoryError.UserNotFound(message),
                 SlotTakenMessage    => new RepositoryError.TimeSlotTaken(message),
-                _                   => new RepositoryError.Unexpected(message)
+                _                   => throw new InvalidOperationException($"Unknown procedure error: {message}")
             };
             return (null, error);
         }
