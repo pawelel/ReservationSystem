@@ -7,10 +7,10 @@ namespace ReservationSystem.Tests;
 [Collection("Database")]
 public class ConcurrencyTests : IAsyncLifetime
 {
-    private const int UserAnna   = 1;
-    private const int UserJan    = 2;
-    private const int UserPiotr  = 3;
-    private const int UserMaria  = 4;
+    private const int UserAnna = 1;
+    private const int UserJan = 2;
+    private const int UserPiotr = 3;
+    private const int UserMaria = 4;
     private const int UserTomasz = 5;
 
     private readonly ReservationWebApplicationFactory _factory;
@@ -39,9 +39,9 @@ public class ConcurrencyTests : IAsyncLifetime
         const int parallelRequests = 50;
         var request = new CreateReservationRequest
         {
-            DeskId    = 1,
-            StartAt   = new DateTime(2026, 5, 1, 9, 0, 0),
-            EndAt     = new DateTime(2026, 5, 1, 10, 0, 0)
+            DeskId = 1,
+            StartAt = new DateTime(2026, 5, 1, 9, 0, 0),
+            EndAt = new DateTime(2026, 5, 1, 10, 0, 0)
         };
 
         var gate = new TaskCompletionSource();
@@ -55,8 +55,8 @@ public class ConcurrencyTests : IAsyncLifetime
         gate.SetResult();
         var responses = await Task.WhenAll(tasks);
 
-        var created   = responses.Count(r => r.StatusCode == HttpStatusCode.Created);
-        var conflict  = responses.Count(r => r.StatusCode == HttpStatusCode.Conflict);
+        var created = responses.Count(r => r.StatusCode == HttpStatusCode.Created);
+        var conflict = responses.Count(r => r.StatusCode == HttpStatusCode.Conflict);
         var breakdown = string.Join(", ", responses.GroupBy(r => (int)r.StatusCode).Select(g => $"{g.Key}:{g.Count()}"));
 
         Assert.True(created == 1 && conflict == parallelRequests - 1,
@@ -72,9 +72,9 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var slot = new CreateReservationRequest
         {
-            DeskId  = 2,
+            DeskId = 2,
             StartAt = new DateTime(2026, 6, 1, 9, 0, 0),
-            EndAt   = new DateTime(2026, 6, 1, 10, 0, 0)
+            EndAt = new DateTime(2026, 6, 1, 10, 0, 0)
         };
 
         await LoginAs(_client, UserAnna);
@@ -100,15 +100,15 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var morning = new CreateReservationRequest
         {
-            DeskId  = 3,
+            DeskId = 3,
             StartAt = new DateTime(2026, 7, 1, 9, 0, 0),
-            EndAt   = new DateTime(2026, 7, 1, 11, 0, 0)
+            EndAt = new DateTime(2026, 7, 1, 11, 0, 0)
         };
         var afternoon = new CreateReservationRequest
         {
-            DeskId  = 3,
+            DeskId = 3,
             StartAt = morning.EndAt,
-            EndAt   = morning.EndAt.AddHours(2)
+            EndAt = morning.EndAt.AddHours(2)
         };
 
         Assert.Equal(HttpStatusCode.Created, (await _client.PostAsJsonAsync("/api/reservations", morning)).StatusCode);
@@ -120,18 +120,18 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var taken = new CreateReservationRequest
         {
-            DeskId  = 4,
-            StartAt = new DateTime(2026, 8, 1,  9, 0, 0),
-            EndAt   = new DateTime(2026, 8, 1, 11, 0, 0)
+            DeskId = 4,
+            StartAt = new DateTime(2026, 8, 1, 9, 0, 0),
+            EndAt = new DateTime(2026, 8, 1, 11, 0, 0)
         };
         var overlapping = new CreateReservationRequest
         {
-            DeskId  = taken.DeskId,
+            DeskId = taken.DeskId,
             StartAt = new DateTime(2026, 8, 1, 10, 0, 0),
-            EndAt   = new DateTime(2026, 8, 1, 12, 0, 0)
+            EndAt = new DateTime(2026, 8, 1, 12, 0, 0)
         };
 
-        Assert.Equal(HttpStatusCode.Created,  (await _client.PostAsJsonAsync("/api/reservations", taken)).StatusCode);
+        Assert.Equal(HttpStatusCode.Created, (await _client.PostAsJsonAsync("/api/reservations", taken)).StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, (await _client.PostAsJsonAsync("/api/reservations", overlapping)).StatusCode);
     }
 
@@ -140,9 +140,9 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var invalid = new CreateReservationRequest
         {
-            DeskId  = 1,
+            DeskId = 1,
             StartAt = new DateTime(2026, 9, 1, 10, 0, 0),
-            EndAt   = new DateTime(2026, 9, 1,  9, 0, 0)
+            EndAt = new DateTime(2026, 9, 1, 9, 0, 0)
         };
 
         var response = await _client.PostAsJsonAsync("/api/reservations", invalid);
@@ -154,9 +154,9 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var request = new CreateReservationRequest
         {
-            DeskId  = 9999,
+            DeskId = 9999,
             StartAt = new DateTime(2026, 10, 1, 9, 0, 0),
-            EndAt   = new DateTime(2026, 10, 1, 10, 0, 0)
+            EndAt = new DateTime(2026, 10, 1, 10, 0, 0)
         };
 
         var response = await _client.PostAsJsonAsync("/api/reservations", request);
@@ -168,16 +168,16 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var request = new CreateReservationRequest
         {
-            DeskId  = 5,
+            DeskId = 5,
             StartAt = new DateTime(2026, 11, 1, 9, 0, 0),
-            EndAt   = new DateTime(2026, 11, 1, 10, 0, 0)
+            EndAt = new DateTime(2026, 11, 1, 10, 0, 0)
         };
 
         var create = await _client.PostAsJsonAsync("/api/reservations", request);
         Assert.Equal(HttpStatusCode.Created, create.StatusCode);
         var created = await create.Content.ReadFromJsonAsync<ReservationDto>();
 
-        var first  = await _client.DeleteAsync($"/api/reservations/{created!.Id}");
+        var first = await _client.DeleteAsync($"/api/reservations/{created!.Id}");
         var second = await _client.DeleteAsync($"/api/reservations/{created.Id}");
 
         Assert.Equal(HttpStatusCode.NoContent, first.StatusCode);
@@ -188,7 +188,7 @@ public class ConcurrencyTests : IAsyncLifetime
     public async Task Same_time_on_different_desks_both_succeed()
     {
         var slot = (Start: new DateTime(2026, 12, 1, 9, 0, 0),
-                    End:   new DateTime(2026, 12, 1, 10, 0, 0));
+                    End: new DateTime(2026, 12, 1, 10, 0, 0));
 
         var a = new CreateReservationRequest { DeskId = 1, StartAt = slot.Start, EndAt = slot.End };
         var b = new CreateReservationRequest { DeskId = 2, StartAt = slot.Start, EndAt = slot.End };
@@ -202,9 +202,9 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var request = new CreateReservationRequest
         {
-            DeskId  = 3,
+            DeskId = 3,
             StartAt = new DateTime(2027, 1, 1, 9, 0, 0),
-            EndAt   = new DateTime(2027, 1, 1, 10, 0, 0)
+            EndAt = new DateTime(2027, 1, 1, 10, 0, 0)
         };
 
         await LoginAs(_client, UserPiotr);
@@ -226,9 +226,9 @@ public class ConcurrencyTests : IAsyncLifetime
     {
         var request = new CreateReservationRequest
         {
-            DeskId  = 4,
+            DeskId = 4,
             StartAt = new DateTime(2027, 2, 1, 9, 0, 0),
-            EndAt   = new DateTime(2027, 2, 1, 10, 0, 0)
+            EndAt = new DateTime(2027, 2, 1, 10, 0, 0)
         };
         var created = await _client.PostAsJsonAsync("/api/reservations", request);
         var reservation = await created.Content.ReadFromJsonAsync<ReservationDto>();

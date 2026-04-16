@@ -16,7 +16,7 @@ Stack: .NET 10, ASP.NET Core (Blazor Server + Minimal API), EF Core, SQL Server.
   ```bash
   docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Your_password123" -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
   ```
-  i ustaw `Database:ConnectionString` w `src/ReservationSystem.Web/appsettings.Development.json` na `Server=localhost;Database=ReservationSystem;User Id=sa;Password=Your_password123;TrustServerCertificate=True;`.
+  a następnie albo wyeksportuj `Database__ConnectionString=Server=localhost,1433;Database=ReservationSystem;User Id=sa;Password=Your_password123;TrustServerCertificate=True;Encrypt=False;` (zalecane - nic w repo nie trzeba zmieniać), albo wpisz to samo w `Database:ConnectionString` w `src/ReservationSystem.Web/appsettings.Development.json`.
 - Narzędzie `dotnet-ef`: `dotnet tool install --global dotnet-ef`
 
 ```bash

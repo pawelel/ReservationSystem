@@ -37,10 +37,10 @@ internal sealed class ReservationService(IReservationRepository repository) : IR
         {
             return error switch
             {
-                RepositoryError.DeskNotFound   => Result<ReservationDto>.NotFound(ErrorCodes.DeskNotFound),
-                RepositoryError.UserNotFound   => Result<ReservationDto>.NotFound(ErrorCodes.UserNotFound),
-                RepositoryError.TimeSlotTaken  => Result<ReservationDto>.Conflict(ErrorCodes.TimeSlotTaken),
-                _                              => Result<ReservationDto>.Conflict(ErrorCodes.Unexpected)
+                RepositoryError.DeskNotFound => Result<ReservationDto>.NotFound(ErrorCodes.DeskNotFound),
+                RepositoryError.UserNotFound => Result<ReservationDto>.NotFound(ErrorCodes.UserNotFound),
+                RepositoryError.TimeSlotTaken => Result<ReservationDto>.Conflict(ErrorCodes.TimeSlotTaken),
+                _ => Result<ReservationDto>.Conflict(ErrorCodes.Unexpected)
             };
         }
 

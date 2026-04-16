@@ -9,12 +9,12 @@ namespace ReservationSystem.Web.Demo;
 public sealed record RaceParameters(int DeskId, DateTime StartAt, DateTime EndAt, int AttackerCount);
 
 public sealed record RaceAttacker(
-    int     UserId,
-    string  UserName,
-    string  Outcome,
-    int?    ReservationId,
+    int UserId,
+    string UserName,
+    string Outcome,
+    int? ReservationId,
     string? ErrorCode,
-    long    ElapsedMs);
+    long ElapsedMs);
 
 public sealed record RaceSummary(
     int AttackerCount,
@@ -52,9 +52,9 @@ public sealed class RaceRunner(IServiceScopeFactory scopeFactory, IOptions<Reser
             var result = await scopedSvc.CreateAsync(
                 new CreateReservationRequest
                 {
-                    DeskId  = parameters.DeskId,
+                    DeskId = parameters.DeskId,
                     StartAt = parameters.StartAt,
-                    EndAt   = parameters.EndAt
+                    EndAt = parameters.EndAt
                 },
                 user.Id,
                 ct);

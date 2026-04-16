@@ -9,9 +9,9 @@ namespace ReservationSystem.Infrastructure.Persistence;
 
 internal sealed class ReservationRepository(IDbContextFactory<AppDbContext> dbFactory) : IReservationRepository
 {
-    private const string DeskNotFoundMessage   = "Desk not found.";
-    private const string UserNotFoundMessage   = "User not found.";
-    private const string SlotTakenMessage      = "The desk is already reserved for the requested time slot.";
+    private const string DeskNotFoundMessage = "Desk not found.";
+    private const string UserNotFoundMessage = "User not found.";
+    private const string SlotTakenMessage = "The desk is already reserved for the requested time slot.";
 
     public async Task<IReadOnlyList<Desk>> GetDesksAsync(CancellationToken ct = default)
     {
@@ -73,9 +73,9 @@ internal sealed class ReservationRepository(IDbContextFactory<AppDbContext> dbFa
         await using var db = await dbFactory.CreateDbContextAsync(ct);
 
         var newIdParam = new SqlParameter("@NewReservationId", SqlDbType.Int)
-            { Direction = ParameterDirection.Output };
+        { Direction = ParameterDirection.Output };
         var errorParam = new SqlParameter("@ErrorMessage", SqlDbType.NVarChar, 500)
-            { Direction = ParameterDirection.Output };
+        { Direction = ParameterDirection.Output };
 
         await db.Database.ExecuteSqlRawAsync(
             "EXEC dbo.usp_CreateReservation @DeskId, @UserId, @StartAt, @EndAt, @NewReservationId OUTPUT, @ErrorMessage OUTPUT",
@@ -96,8 +96,8 @@ internal sealed class ReservationRepository(IDbContextFactory<AppDbContext> dbFa
             {
                 DeskNotFoundMessage => new RepositoryError.DeskNotFound(message),
                 UserNotFoundMessage => new RepositoryError.UserNotFound(message),
-                SlotTakenMessage    => new RepositoryError.TimeSlotTaken(message),
-                _                   => throw new InvalidOperationException("Unknown procedure error returned from usp_CreateReservation.")
+                SlotTakenMessage => new RepositoryError.TimeSlotTaken(message),
+                _ => throw new InvalidOperationException("Unknown procedure error returned from usp_CreateReservation.")
             };
             return (null, error);
         }

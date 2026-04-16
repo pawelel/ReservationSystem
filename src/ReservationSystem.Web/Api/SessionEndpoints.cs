@@ -41,11 +41,11 @@ public static class SessionEndpoints
 
                 http.Response.Cookies.Append(CookieUserContext.CookieName, token, new CookieOptions
                 {
-                    HttpOnly    = true,
-                    SameSite    = SameSiteMode.Strict,
-                    Secure      = http.Request.IsHttps,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict,
+                    Secure = http.Request.IsHttps,
                     IsEssential = true,
-                    MaxAge      = TimeSpan.FromDays(30)
+                    MaxAge = TimeSpan.FromDays(30)
                 });
 
                 return Results.NoContent();
