@@ -26,6 +26,8 @@ dotnet run --project src/ReservationSystem.Web
 
 Aplikacja startuje pod <http://localhost:5000>. Testy: `dotnet test`.
 
+Uruchomienie produkcyjne (albo z `--no-launch-profile`): `dotnet publish src/ReservationSystem.Web -c Release -o publish && ./publish/ReservationSystem.Web`.
+
 ## Zabezpieczenie przed współbieżnością
 
 Sprawdzenie kolizji i wstawienie rekordu odbywa się atomowo w procedurze składowanej [`usp_CreateReservation`](src/ReservationSystem.Infrastructure/Persistence/Scripts/usp_CreateReservation.sql), gdzie zapytanie kontrolne na tabeli `Reservations` używa hintów `WITH (UPDLOCK, HOLDLOCK)` w ramach jednej transakcji. `UPDLOCK` uniemożliwia dwóm transakcjom jednoczesne odczytanie braku kolizji dla tego samego biurka, a `HOLDLOCK` zakłada blokady zakresowe (key-range) blokujące insert wpadający w badany przedział aż do commita — razem gwarantują, że sekwencja „sprawdź → wstaw" jest niepodzielna i tylko jedno z konkurujących żądań może ją zakończyć sukcesem.
