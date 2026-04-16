@@ -10,7 +10,7 @@ internal sealed class ReservationConfiguration : IEntityTypeConfiguration<Reserv
     {
         e.ToTable("Reservations", t =>
         {
-            t.HasCheckConstraint("CHK_Reservations_Dates",  "[EndAt] > [StartAt]");
+            t.HasCheckConstraint("CHK_Reservations_Dates", "[EndAt] > [StartAt]");
             t.HasCheckConstraint("CHK_Reservations_Status", "[Status] IN (0, 1)");
         });
 

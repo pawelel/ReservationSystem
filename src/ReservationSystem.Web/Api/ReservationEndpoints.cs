@@ -66,16 +66,16 @@ public static class ReservationEndpoints
     {
         var payload = new
         {
-            code    = errorCode,
+            code = errorCode,
             message = errorCode is null ? null : localizer[errorCode].Value
         };
 
         return errorType switch
         {
             ErrorType.Validation => Results.BadRequest(payload),
-            ErrorType.NotFound   => Results.NotFound(payload),
-            ErrorType.Forbidden  => Results.Json(payload, statusCode: StatusCodes.Status403Forbidden),
-            _                    => Results.Conflict(payload)
+            ErrorType.NotFound => Results.NotFound(payload),
+            ErrorType.Forbidden => Results.Json(payload, statusCode: StatusCodes.Status403Forbidden),
+            _ => Results.Conflict(payload)
         };
     }
 }
